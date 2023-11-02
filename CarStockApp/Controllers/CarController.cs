@@ -20,22 +20,42 @@ namespace CarStockApp.Controllers
         [HttpGet("SearchByMakeOnly/{brand}", Name = "SearchByMakeOnly")]
         public IEnumerable<CarStocks> GetCarsByMakeOnly(string brand)
         {
-            return CarStocks.FilterByMake(CarList.GetCars(), brand);
+            List<CarStocks> cars = CarList.GetCars1();
+            return CarStocks.FilterByMake(cars, brand);
         }
 
-        // Get car by make and model
-        [HttpGet("SearchByMakeAndModel/{brand}/{name}", Name = "SearchByMakeAndModel")]
-        public IEnumerable<CarStocks> GetCarsByMakeAndModel(string brand, string name)
+        // Get list of cars for a certain model
+        // Car brand also needs to be known, as in some rare cases, model name shared between 2 brands
+        [HttpGet("SearchByModel/{brand}/{model}", Name = "SearchByModel")]
+        public IEnumerable<CarStocks> GetCarsByModel(string brand, string model)
         {
-            return CarStocks.FilterByMakeAndModel(CarList.GetCars(), brand, name);
+            List<CarStocks> cars = CarList.GetCars1();
+            return CarStocks.FilterByModel(cars, brand, model);
+        }
+
+
+        // Get list of cars for a certain year
+        [HttpGet("SearchByYearOnly/{year}", Name = "SearchByYearOnly")]
+        public IEnumerable<CarStocks> GetCarsByYearOnly(int year)
+        {
+            List<CarStocks> cars = CarList.GetCars1();
+            return CarStocks.FilterByYear(cars, year);
+        }
+
+        // Get car by everything
+        [HttpGet("SearchByEverything/{brand}/{name}/{year}", Name = "SearchByEverything")]
+        public IEnumerable<CarStocks> GetCarsByMakeAndModel(string brand, string name, int year)
+        {
+            List<CarStocks> cars = CarList.GetCars1();
+            return CarStocks.FilterByMakeAndModel(cars, brand, name, year);
         }
 
         // Update Stock for a make/model
-        [HttpPatch("UpdateCarStock/{brand}/{name}/{num}", Name = "UpdateCarStock")]
-        public IActionResult UpdateCarStock(string brand, string name, int num)
+        [HttpPatch("UpdateCarStock/{brand}/{name}/{year}/{num}", Name = "UpdateCarStock")]
+        public IActionResult UpdateCarStock(string brand, string name, int year, int num)
         {
-
-            CarStocks car = CarStocks.UpdateStock(CarList.GetCars(), brand, name, num);
+            List<CarStocks> cars = CarList.GetCars1();
+            CarStocks car = CarStocks.UpdateStock(cars, brand, name, year, num);
             if (car != null)
             {
                 return Ok(car);
@@ -49,30 +69,31 @@ namespace CarStockApp.Controllers
 
         // Add Car
         [HttpPost("AddCarStock/{brand}/{name}/{num}", Name = "AddCarStock")]
-        public IActionResult AddCarStock(string brand, string name, int num)
+        public IActionResult AddCarStock(string brand, string name, int year, int num)
         {
-            if (CarStocks.FilterByMakeAndModel(CarList.GetCars(), brand, name).Count != 0)
+            List<CarStocks> cars = CarList.GetCars1();
+            if (CarStocks.FilterByMakeAndModel(cars, brand, name, year).Count != 0)
             {
                 return Conflict("Car already exists.");
             }
             else
             {
-                CarStocks car = CarStocks.AddCar(CarList.GetCars(), brand, name, num);
+                CarStocks car = CarStocks.AddCar(cars, brand, name, year, num);
                 return Ok(car);
             }
         }
 
         // Delete Car
         [HttpDelete("DeleteCarStock/{brand}/{name}/", Name = "DeleteCarStock")]
-        public IActionResult DeleteCarStock(string brand, string name)
+        public IActionResult DeleteCarStock(string brand, string name, int year)
         {
-            if (CarStocks.FilterByMakeAndModel(CarList.GetCars(), brand, name).Count == 0)
+            if (CarStocks.FilterByMakeAndModel(CarList.GetCars1(), brand, name, year).Count == 0)
             {
                 return NotFound("Car doesn't exist.");
             }
             else
             {
-                CarStocks car = CarStocks.DeleteCar(CarList.GetCars(), brand, name);
+                CarStocks car = CarStocks.DeleteCar(CarList.GetCars1(), brand, name, year);
                 return Ok(car);
             }
 

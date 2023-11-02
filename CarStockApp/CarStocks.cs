@@ -20,21 +20,37 @@ namespace CarStockApp
             Stock = stock;
         }
 
+        // Filter by make only 
         public static List<CarStocks> FilterByMake(List<CarStocks> cars, string DesiredMake)
         {
             return cars.Where(car => car.Make == DesiredMake).ToList();
         }
 
-        public static List<CarStocks> FilterByMakeAndModel(List<CarStocks> cars, string DesiredMake, string DesiredModel)
+        // Filter by model
+        public static List<CarStocks> FilterByModel(List<CarStocks> cars, string DesiredMake, string DesiredModel)
         {
             return cars.Where(car => (car.Make == DesiredMake) && (car.Model == DesiredModel)).ToList();
         }
 
-        public static CarStocks UpdateStock(List<CarStocks> cars, string DesiredMake, string DesiredModel, int newStock)
+
+        // Filter by year only
+        public static List<CarStocks> FilterByYear(List<CarStocks> cars, int DesiredYear)
         {
-            if (CarStocks.FilterByMakeAndModel(CarList.GetCars(), DesiredMake, DesiredModel).Count != 0)
+            return cars.Where(car => car.Year == DesiredYear).ToList();
+        }
+
+        // Filter by everything (make, model, year)
+        public static List<CarStocks> FilterByMakeAndModel(List<CarStocks> cars, string DesiredMake, string DesiredModel, int DesiredYear)
+        {
+            return cars.Where(car => (car.Make == DesiredMake) && (car.Model == DesiredModel) && (car.Year == DesiredYear)).ToList();
+        }
+
+        // Update Stock for car
+        public static CarStocks UpdateStock(List<CarStocks> cars, string DesiredMake, string DesiredModel, int DesiredYear, int newStock)
+        {
+            if (CarStocks.FilterByMakeAndModel(CarList.GetCars1(), DesiredMake, DesiredModel, DesiredYear).Count != 0)
             {
-                CarStocks car = CarStocks.FilterByMakeAndModel(cars, DesiredMake, DesiredModel)[0];
+                CarStocks car = CarStocks.FilterByMakeAndModel(cars, DesiredMake, DesiredModel, DesiredYear)[0];
                 car.Stock = newStock;
                 return car;
             }
@@ -45,17 +61,17 @@ namespace CarStockApp
         }
 
         // Add new car
-        public static CarStocks AddCar(List<CarStocks> cars, string NewMake, string NewModel, int NewStock)
+        public static CarStocks AddCar(List<CarStocks> cars, string NewMake, string NewModel, int NewYear, int NewStock)
         {
-            cars.Add(new CarStocks(NewMake, NewModel, 2023, NewStock));
-            CarStocks car = CarStocks.FilterByMakeAndModel(cars, NewMake, NewModel)[0];
+            cars.Add(new CarStocks(NewMake, NewModel, NewYear, NewStock));
+            CarStocks car = CarStocks.FilterByMakeAndModel(cars, NewMake, NewModel, NewYear)[0];
             return car;
         }
 
         // Delete a car
-        public static CarStocks DeleteCar(List<CarStocks> cars, string OldMake, string OldModel)
+        public static CarStocks DeleteCar(List<CarStocks> cars, string OldMake, string OldModel, int OldYear)
         {
-            CarStocks OldCar = CarStocks.FilterByMakeAndModel(cars, OldMake, OldModel)[0];
+            CarStocks OldCar = CarStocks.FilterByMakeAndModel(cars, OldMake, OldModel, OldYear)[0];
             cars.Remove(OldCar);
 
             return OldCar;
@@ -65,23 +81,40 @@ namespace CarStockApp
     // Generates list of cars for a particular dealer
     public class CarList
     {
-        private static List<CarStocks> cars;
+        private static List<CarStocks> cars1;
+        private static List<CarStocks> cars2;
+
         static CarList()
         {
-           cars = new List<CarStocks>
+            cars1 = new List<CarStocks>
             {
                 new CarStocks("Audi", "A4", 2023, 100),
+                new CarStocks("Audi", "A4", 2022, 50),
                 new CarStocks("Audi", "A6", 2023, 50),
                 new CarStocks("Audi", "A8", 2023, 10),
                 new CarStocks("Toyota", "Camry", 2023, 300),
+                new CarStocks("Toyota", "Camry", 2022, 250),
                 new CarStocks("Toyota", "Corolla", 2023, 200),
                 new CarStocks("VW", "Golf", 2023, 150),
                 new CarStocks("VW", "Polo", 2023, 70)
             };
+
+            cars2 = new List<CarStocks>
+            {
+                new CarStocks("Toyota", "Camry", 2022, 150),
+                new CarStocks("BMW", "M3", 2023, 90),
+                new CarStocks("BMW", "M3", 2022, 40)
+            };
+
         }
-        public static List<CarStocks> GetCars()
+
+        public static List<CarStocks> GetCars1()
         {
-            return cars;
+            return cars1;
+        }
+        public static List<CarStocks> GetCars2()
+        {
+            return cars2;
         }
 
     }
