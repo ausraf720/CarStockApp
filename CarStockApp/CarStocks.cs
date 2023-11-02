@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.DataProtection;
 using System;
+using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml.Linq;
@@ -118,6 +120,44 @@ namespace CarStockApp
         }
 
     }
+
+
+    public class LoginModel
+    {
+        public string? Username { get; set; }
+        public string? Password { get; set; }
+    }
+
+    public interface IUserService
+    {
+        bool ValidateCredentials(string username, string password);
+    }
+
+    public class UserService : IUserService
+    {
+        private readonly Dictionary<string, string> _users = new Dictionary<string, string>
+        {
+            { "dealer1", "pass1" },
+            { "dealer2", "pass2" },
+            // More dealers can be added if necessary
+        
+        };
+
+        public bool ValidateCredentials(string username, string password)
+        {
+            /*
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                return false;
+            }*/
+
+            return _users.TryGetValue(username, out var storedPassword) && storedPassword == password;
+        }
+    }
+
+
+
+
 
 }
 

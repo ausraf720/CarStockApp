@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Linq;
 using System;
-
+using System.Security.Cryptography;
 
 namespace CarStockApp.Controllers
 {
@@ -17,7 +17,7 @@ namespace CarStockApp.Controllers
         }
 
         // Get list of cars for a certain make (brand)
-        [HttpGet("SearchByMakeOnly/{brand}", Name = "SearchByMakeOnly")]
+        [HttpGet("SearchByMakeOnly", Name = "SearchByMakeOnly")]
         public IEnumerable<CarStocks> GetCarsByMakeOnly(string brand)
         {
             List<CarStocks> cars = CarList.GetCars1();
@@ -26,7 +26,7 @@ namespace CarStockApp.Controllers
 
         // Get list of cars for a certain model
         // Car brand also needs to be known, as in some rare cases, model name shared between 2 brands
-        [HttpGet("SearchByModel/{brand}/{model}", Name = "SearchByModel")]
+        [HttpGet("SearchByModel", Name = "SearchByModel")]
         public IEnumerable<CarStocks> GetCarsByModel(string brand, string model)
         {
             List<CarStocks> cars = CarList.GetCars1();
@@ -35,7 +35,7 @@ namespace CarStockApp.Controllers
 
 
         // Get list of cars for a certain year
-        [HttpGet("SearchByYearOnly/{year}", Name = "SearchByYearOnly")]
+        [HttpGet("SearchByYearOnly", Name = "SearchByYearOnly")]
         public IEnumerable<CarStocks> GetCarsByYearOnly(int year)
         {
             List<CarStocks> cars = CarList.GetCars1();
@@ -43,7 +43,7 @@ namespace CarStockApp.Controllers
         }
 
         // Get car by everything
-        [HttpGet("SearchByEverything/{brand}/{name}/{year}", Name = "SearchByEverything")]
+        [HttpGet("SearchByEverything", Name = "SearchByEverything")]
         public IEnumerable<CarStocks> GetCarsByMakeAndModel(string brand, string name, int year)
         {
             List<CarStocks> cars = CarList.GetCars1();
@@ -51,7 +51,7 @@ namespace CarStockApp.Controllers
         }
 
         // Update Stock for a make/model
-        [HttpPatch("UpdateCarStock/{brand}/{name}/{year}/{num}", Name = "UpdateCarStock")]
+        [HttpPatch("UpdateCarStock", Name = "UpdateCarStock")]
         public IActionResult UpdateCarStock(string brand, string name, int year, int num)
         {
             List<CarStocks> cars = CarList.GetCars1();
@@ -68,7 +68,7 @@ namespace CarStockApp.Controllers
         }
 
         // Add Car
-        [HttpPost("AddCarStock/{brand}/{name}/{num}", Name = "AddCarStock")]
+        [HttpPost("AddCarStock", Name = "AddCarStock")]
         public IActionResult AddCarStock(string brand, string name, int year, int num)
         {
             List<CarStocks> cars = CarList.GetCars1();
@@ -84,7 +84,7 @@ namespace CarStockApp.Controllers
         }
 
         // Delete Car
-        [HttpDelete("DeleteCarStock/{brand}/{name}/", Name = "DeleteCarStock")]
+        [HttpDelete("DeleteCarStock", Name = "DeleteCarStock")]
         public IActionResult DeleteCarStock(string brand, string name, int year)
         {
             if (CarStocks.FilterByMakeAndModel(CarList.GetCars1(), brand, name, year).Count == 0)
