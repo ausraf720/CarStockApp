@@ -51,7 +51,7 @@ namespace CarStockApp
         // Update Stock for car
         public static CarStocks UpdateStock(List<CarStocks> cars, string DesiredMake, string DesiredModel, int DesiredYear, int newStock)
         {
-            if (CarStocks.FilterByMakeAndModel(CarList.GetCars1(), DesiredMake, DesiredModel, DesiredYear).Count != 0)
+            if (CarStocks.FilterByMakeAndModel(cars, DesiredMake, DesiredModel, DesiredYear).Count != 0)
             {
                 CarStocks car = CarStocks.FilterByMakeAndModel(cars, DesiredMake, DesiredModel, DesiredYear)[0];
                 car.Stock = newStock;
