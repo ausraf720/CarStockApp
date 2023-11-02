@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Xml.Linq;
-using System;
-using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarStockApp.Controllers
 {
+    // Authorisation required to access any of these routes, meaning dealers must login
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class CarController : ControllerBase
@@ -20,7 +20,7 @@ namespace CarStockApp.Controllers
         [HttpGet("SearchByMakeOnly", Name = "SearchByMakeOnly")]
         public IEnumerable<CarStocks> GetCarsByMakeOnly(string brand)
         {
-            List<CarStocks> cars = CarList.GetCars1();
+            List<CarStocks> cars = CarList.Decider(AppGlobals.CurrentUser);
             return CarStocks.FilterByMake(cars, brand);
         }
 
@@ -29,16 +29,19 @@ namespace CarStockApp.Controllers
         [HttpGet("SearchByModel", Name = "SearchByModel")]
         public IEnumerable<CarStocks> GetCarsByModel(string brand, string model)
         {
-            List<CarStocks> cars = CarList.GetCars1();
+            List<CarStocks> cars = CarList.Decider(AppGlobals.CurrentUser);
             return CarStocks.FilterByModel(cars, brand, model);
         }
+
+
+        
 
 
         // Get list of cars for a certain year
         [HttpGet("SearchByYearOnly", Name = "SearchByYearOnly")]
         public IEnumerable<CarStocks> GetCarsByYearOnly(int year)
         {
-            List<CarStocks> cars = CarList.GetCars1();
+            List<CarStocks> cars = CarList.Decider(AppGlobals.CurrentUser);
             return CarStocks.FilterByYear(cars, year);
         }
 
@@ -46,7 +49,7 @@ namespace CarStockApp.Controllers
         [HttpGet("SearchByEverything", Name = "SearchByEverything")]
         public IEnumerable<CarStocks> GetCarsByMakeAndModel(string brand, string name, int year)
         {
-            List<CarStocks> cars = CarList.GetCars1();
+            List<CarStocks> cars = CarList.Decider(AppGlobals.CurrentUser);
             return CarStocks.FilterByMakeAndModel(cars, brand, name, year);
         }
 
@@ -54,7 +57,7 @@ namespace CarStockApp.Controllers
         [HttpPatch("UpdateCarStock", Name = "UpdateCarStock")]
         public IActionResult UpdateCarStock(string brand, string name, int year, int num)
         {
-            List<CarStocks> cars = CarList.GetCars1();
+            List<CarStocks> cars = CarList.Decider(AppGlobals.CurrentUser);
             CarStocks car = CarStocks.UpdateStock(cars, brand, name, year, num);
             if (car != null)
             {
@@ -71,7 +74,7 @@ namespace CarStockApp.Controllers
         [HttpPost("AddCarStock", Name = "AddCarStock")]
         public IActionResult AddCarStock(string brand, string name, int year, int num)
         {
-            List<CarStocks> cars = CarList.GetCars1();
+            List<CarStocks> cars = CarList.Decider(AppGlobals.CurrentUser);
             if (CarStocks.FilterByMakeAndModel(cars, brand, name, year).Count != 0)
             {
                 return Conflict("Car already exists.");
@@ -86,14 +89,17 @@ namespace CarStockApp.Controllers
         // Delete Car
         [HttpDelete("DeleteCarStock", Name = "DeleteCarStock")]
         public IActionResult DeleteCarStock(string brand, string name, int year)
+        
         {
-            if (CarStocks.FilterByMakeAndModel(CarList.GetCars1(), brand, name, year).Count == 0)
+            List<CarStocks> cars = CarList.Decider(AppGlobals.CurrentUser);
+
+            if (CarStocks.FilterByMakeAndModel(cars, brand, name, year).Count == 0)
             {
                 return NotFound("Car doesn't exist.");
             }
             else
             {
-                CarStocks car = CarStocks.DeleteCar(CarList.GetCars1(), brand, name, year);
+                CarStocks car = CarStocks.DeleteCar(cars, brand, name, year);
                 return Ok(car);
             }
 

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
@@ -109,7 +110,6 @@ namespace CarStockApp
             };
 
         }
-
         public static List<CarStocks> GetCars1()
         {
             return cars1;
@@ -119,13 +119,27 @@ namespace CarStockApp
             return cars2;
         }
 
+        public static List<CarStocks> Decider(string username)
+        {
+            if (username == "dealer1")
+            {
+                return GetCars1();
+            }
+            else if (username == "dealer2") {
+                return GetCars2();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
     }
 
 
-    public class LoginModel
+    public static class AppGlobals
     {
-        public string? Username { get; set; }
-        public string? Password { get; set; }
+        public static string? CurrentUser { get; set; }
     }
 
     public interface IUserService
@@ -145,11 +159,6 @@ namespace CarStockApp
 
         public bool ValidateCredentials(string username, string password)
         {
-            /*
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-            {
-                return false;
-            }*/
 
             return _users.TryGetValue(username, out var storedPassword) && storedPassword == password;
         }

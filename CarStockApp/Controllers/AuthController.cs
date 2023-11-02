@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -17,13 +18,21 @@ namespace CarStockApp.Controllers
             _userService = userService;
         }
 
+        [Authorize]
+        [HttpGet("GetUsername", Name = "GetUsername")]
+        public IActionResult GetUsername()
+        {
+            return Ok(AppGlobals.CurrentUser);
+        }
+
+
         [HttpPost("Login", Name = "Login")]
         public IActionResult Login(string username, string password)
         {
             if (_userService.ValidateCredentials(username, password))
             {
-                var token = GenerateJwtToken(username);
-                return Ok(new { token });
+                AppGlobals.CurrentUser = username;
+                return Ok(GenerateJwtToken(username));
             }
             else
             {
@@ -39,15 +48,14 @@ namespace CarStockApp.Controllers
 
             var claims = new[]
             {
-            new Claim(ClaimTypes.Name, username)
-            // Add other claims as needed
+            new Claim(JwtRegisteredClaimNames.Sub, username)
         };
 
             var token = new JwtSecurityToken(
                 _configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(30), // token will expire in 30 minutes
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(60), // token will expire in 60 minutes
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
