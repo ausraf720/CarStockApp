@@ -89,6 +89,7 @@ namespace CarStockApp
 
         static CarList()
         {
+            // Cars for dealer1
             cars1 = new List<CarStocks>
             {
                 new CarStocks("Audi", "A4", 2023, 100),
@@ -102,6 +103,7 @@ namespace CarStockApp
                 new CarStocks("VW", "Polo", 2023, 70)
             };
 
+            // Cars for dealer2
             cars2 = new List<CarStocks>
             {
                 new CarStocks("Toyota", "Camry", 2022, 150),
@@ -119,6 +121,7 @@ namespace CarStockApp
             return cars2;
         }
 
+        // Method to return list of cars based on current user
         public static List<CarStocks> Decider(string username)
         {
             if (username == "dealer1")
@@ -136,17 +139,19 @@ namespace CarStockApp
 
     }
 
-
+    // Variable for current user (tried to decode JWT to get user, but couldn't get it working)
     public static class AppGlobals
     {
         public static string? CurrentUser { get; set; }
     }
 
+    // Validate username matches password
     public interface IUserService
     {
         bool ValidateCredentials(string username, string password);
     }
 
+    // Dictionary list of current users with their passwords
     public class UserService : IUserService
     {
         private readonly Dictionary<string, string> _users = new Dictionary<string, string>
@@ -163,10 +168,6 @@ namespace CarStockApp
             return _users.TryGetValue(username, out var storedPassword) && storedPassword == password;
         }
     }
-
-
-
-
 
 }
 
