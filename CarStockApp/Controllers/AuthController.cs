@@ -18,14 +18,7 @@ namespace CarStockApp.Controllers
             _userService = userService;
         }
 
-        [Authorize]
-        [HttpGet("GetUsername", Name = "GetUsername")]
-        public IActionResult GetUsername()
-        {
-            return Ok(AppGlobals.CurrentUser);
-        }
-
-
+        // Login route, for validating user and generating token
         [HttpPost("Login", Name = "Login")]
         public IActionResult Login(string username, string password)
         {
@@ -41,6 +34,7 @@ namespace CarStockApp.Controllers
             
         }
 
+        // Make JWT Token here
         private string GenerateJwtToken(string username)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
