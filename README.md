@@ -1,12 +1,12 @@
 # CarStockApp
 ## Installation instructions:
 1. First make sure .NET 6.0 is installed to allow application to run: [.NET downloads](https://dotnet.microsoft.com/en-us/download)
-2. Download code, change directory to ./CarStockApp from root folder.
+2. Download code, go to terminal and change directory to ./CarStockApp from root folder.
 3. Run the code below to ensure NuGet packages are installed and application is built, before then running it:
 <p><code>dotnet restore</code></p>
 <p><code>dotnet build</code></p>
 <p><code>dotnet run</code></p>
-4. Code should be working now. Now go to the localhost port the app is running on, and add <code>/swagger</code> to the end to use the Swagger version. For instance, if the app is on <code>https://localhost:7142</code> then change address to: <code>https://localhost:7142/swagger</code>
+4. Code should be working now. Now go to the localhost port the app is running on, and add <code>/swagger</code> to the end to use the Swagger version. Make sure to use the 'https' link, NOT 'http'. For instance, if the app is on <code>https://localhost:7142</code> then change address to: <code>https://localhost:7142/swagger</code>
 
 ## Logging-in instructions:
 All routes except for /Login route do not work without JWT token. In order to use any of the other routes, you can login using details for 2 different example dealers:
