@@ -33,17 +33,33 @@ This should allow you to use the other routes for the dealer you logged in. Note
 
 ### /SearchByMakeOnly 
 
-Dealer 1 has the following makes: 
+#### Dealer 1 has the following makes: 
 * <pre>Audi</pre>
 * <pre>Toyota</pre>
 * <pre>VW</pre>
 
-Dealer 2 has the following makes:
-* <pre>Audi</pre>
+#### Dealer 2 has the following makes:
 * <pre>BMW</pre>
 * <pre>Toyota</pre>
 
 All of these makes give all of the cars in stock for each of the dealers, so they can be used to show what car types CRUD operations can be performed on for a given dealer.
+
+However, if you want to see the list of all cars for both dealers, here is the list, with make model year and stock:
+#### Dealer 1:
+* <code>"Audi", "A4", 2023, 100</code>
+* <code>"Audi", "A4", 2022, 50</code>
+* <code>"Audi", "A6", 2023, 50</code>
+* <code>"Audi", "A8", 2023, 10</code>
+* <code>"Toyota", "Camry", 2023, 300</code>
+* <code>"Toyota", "Camry", 2022, 250</code>
+* <code>"Toyota", "Corolla", 2023, 200</code>
+* <code>"VW", "Golf", 2023, 150</code>
+* <code>"VW", "Polo", 2023, 70</code>
+
+#### Dealer 2:
+* <code>"Toyota", "Camry", 2022, 150</code>
+* <code>"BMW", "M3", 2023, 90</code>
+* <code>"BMW", "M3", 2022, 40</code>
 
 ### /SearchByModel
 
